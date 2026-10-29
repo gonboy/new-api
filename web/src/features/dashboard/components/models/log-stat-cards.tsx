@@ -121,15 +121,16 @@ export function LogStatCards(props: LogStatCardsProps) {
     cacheCreation: stats?.totalCacheCreationTokens ?? 0,
   }
 
-  // const items = statCardsConfig.map((config) => {
+  const items = statCardsConfig.map((config) => {
   // 屏蔽 总 Token 数。 by gb
-  const items = statCardsConfig
-      .filter(
-          (config) =>
-              isAdmin ||
-              !['tokens', 'cacheRead', 'cacheCreation'].includes(config.key)
-      )
-      .map((config) => {
+  // const items = statCardsConfig
+  //     .filter(
+  //         (config) =>
+  //             isAdmin ||
+  //             !['tokens', 'cacheRead', 'cacheCreation', 'avgRpm', 'avgTpm'].includes(config.key)
+  //     )
+  //     .map((config) => {
+
     const rawValue = config.getValue(adaptedStats, timeRangeMinutes)
     const locale = toIntlLocale(i18n.resolvedLanguage || i18n.language)
     const formatted =

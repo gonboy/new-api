@@ -29,6 +29,9 @@ import { useAuthStore } from '@/stores/auth-store'
 import { CTA, Features, Hero, HowItWorks, Stats } from './components'
 import { useHomePageContent } from './hooks'
 
+// by gb. 修改主页
+import { Link } from '@tanstack/react-router'
+
 export function Home() {
   const { i18n, t } = useTranslation()
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -121,13 +124,34 @@ export function Home() {
   }
 
   return (
-    <PublicLayout showMainContainer={false}>
-      <Hero isAuthenticated={isAuthenticated} />
-      <Stats />
-      <Features />
-      <HowItWorks />
-      <CTA isAuthenticated={isAuthenticated} />
-      <Footer />
-    </PublicLayout>
+      <PublicLayout showMainContainer={false}>
+        {/*<Hero isAuthenticated={isAuthenticated} />*/}
+        {/*<Stats />*/}
+        {/*<Features />*/}
+        {/*<HowItWorks />*/}
+        {/*<CTA isAuthenticated={isAuthenticated} />*/}
+
+        {/* by gb. 修改主页 */}
+        <main className="flex min-h-[75vh] flex-col items-center justify-center px-4 text-center">
+          <h1 className="text-3xl font-bold tracking-wide sm:text-5xl">
+            A Little AI, A Little Change
+          </h1>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link
+                to="/sign-up"
+                className="inline-flex items-center justify-center rounded-lg bg-primary px-8 py-3 text-base font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              Sign Up
+            </Link>
+            <Link
+                to="/sign-in"
+                className="inline-flex items-center justify-center rounded-lg bg-green-600 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-green-700"
+            >
+              Sign In
+            </Link>
+          </div>
+        </main>
+        <Footer/>
+      </PublicLayout>
   )
 }

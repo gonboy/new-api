@@ -287,6 +287,34 @@ export function useSidebarConfig(navGroups: NavGroup[]): NavGroup[] {
       ),
     [status?.SidebarModulesAdmin]
   )
+  // 侧边栏 by gb
+  const effectiveAdminConfig = useMemo(() => {
+    // 普通用户不显示「使用日志」
+    if (auth?.user?.role === 1) {
+      return {
+        ...adminConfig,
+        console: {
+          ...adminConfig.console,
+          detail: false,
+          midjourney: false,
+          task: false,
+
+        },
+      }
+    }
+    // 字段如下
+    // defaultConfig["console"] = map[string]any{
+    //   "enabled":   true,
+    //       "detail":    true,
+    //       "token":     true,
+    //       "log":       true,
+    //       "midjourney": true,
+    //       "task":      true,
+    // }
+    
+    // 管理员和超级管理员保持原有配置
+    return adminConfig
+  }, [adminConfig, auth?.user?.role])
 
   const userConfig = useMemo(() => {
     // If the backend marks the user as unable to configure the sidebar
@@ -305,10 +333,14 @@ export function useSidebarConfig(navGroups: NavGroup[]): NavGroup[] {
       navGroups
         .map((group) => ({
           ...group,
-          items: filterNavItems(group.items, adminConfig, userConfig),
+          // 侧边栏. by gb
+          // items: filterNavItems(group.items, adminConfig, userConfig),
+          items: filterNavItems(group.items, effectiveAdminConfig, userConfig),
         }))
         .filter((group) => group.items.length > 0), // Only show navigation groups with visible items
-    [navGroups, adminConfig, userConfig]
+      // 侧边栏. by gb
+      // [navGroups, adminConfig, userConfig]
+        [navGroups, effectiveAdminConfig, userConfig]
   )
 
   return filteredNavGroups

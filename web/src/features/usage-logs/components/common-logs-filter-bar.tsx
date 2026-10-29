@@ -336,28 +336,34 @@ export function CommonLogsFilterBar<TData>(
   )
   const modelFilter = (
     <LogsFilterField>
-      <LogsFilterInput
-        placeholder={t('Model Name')}
-        value={filters.model || ''}
-        onChange={(e) => handleChange('model', e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+      {/* 使用日志-> 搜索 模型名称 by gb */}
+      {isAdmin && (
+        <LogsFilterInput
+          placeholder={t('Model Name')}
+          value={filters.model || ''}
+          onChange={(e) => handleChange('model', e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+      )}
     </LogsFilterField>
   )
   const groupFilter = (
     <LogsFilterField className={sensitiveInputClass}>
-      <Combobox
-        options={groupOptions}
-        allowCustomValue
-        aria-label={t('Group')}
-        emptyText={t('No group found.')}
-        placeholder={t('Group')}
-        className='h-8 min-w-0 text-sm leading-5'
-        popupClassName={sensitiveInputClass}
-        value={filters.group || ''}
-        onValueChange={(value) => handleChange('group', value ?? '')}
-        onKeyDown={handleKeyDown}
-      />
+      {/* 使用日志-> 搜索 分组 by gb */}
+      {isAdmin && (
+        <Combobox
+          options={groupOptions}
+          allowCustomValue
+          aria-label={t('Group')}
+          emptyText={t('No group found.')}
+          placeholder={t('Group')}
+          className='h-8 min-w-0 text-sm leading-5'
+          popupClassName={sensitiveInputClass}
+          value={filters.group || ''}
+          onValueChange={(value) => handleChange('group', value ?? '')}
+          onKeyDown={handleKeyDown}
+        />
+      )}
     </LogsFilterField>
   )
   const typeFilter = (
@@ -435,6 +441,8 @@ export function CommonLogsFilterBar<TData>(
   )
   const advancedFilters = (
     <>
+      {/* 使用日志-> 搜索 令牌名称 by gb*/}
+      {isAdmin && (
       <LogsFilterField>
         <LogsFilterInput
           placeholder={t('Token Name')}
@@ -444,6 +452,7 @@ export function CommonLogsFilterBar<TData>(
           onKeyDown={handleKeyDown}
         />
       </LogsFilterField>
+      )}
       {isAdmin && (
         <LogsFilterField>
           <LogsFilterInput
@@ -465,6 +474,8 @@ export function CommonLogsFilterBar<TData>(
           />
         </LogsFilterField>
       )}
+        {/* 使用日志-> 搜索 请求ID by gb*/}
+      {isAdmin && (
       <LogsFilterField>
         <LogsFilterInput
           placeholder={t('Request ID')}
@@ -473,6 +484,9 @@ export function CommonLogsFilterBar<TData>(
           onKeyDown={handleKeyDown}
         />
       </LogsFilterField>
+      )}
+      {/* 使用日志-> 搜索 上游请求ID by gb*/}
+      {isAdmin && (
       <LogsFilterField>
         <LogsFilterInput
           placeholder={t('Upstream Request ID')}
@@ -481,6 +495,7 @@ export function CommonLogsFilterBar<TData>(
           onKeyDown={handleKeyDown}
         />
       </LogsFilterField>
+     )}
     </>
   )
 

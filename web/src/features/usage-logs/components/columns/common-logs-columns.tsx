@@ -677,100 +677,103 @@ export function useCommonLogsColumns(
       size: 160,
     })
     columns.push(
-      {
-        accessorKey: 'model_name',
-        header: t('Model'),
-        cell: function ModelCell({ row }) {
-          const log = row.original
-          if (!isDisplayableLogType(log.type)) return null
-
-          const modelInfo = formatModelName(log)
-
-          return (
-            <div className='flex w-fit flex-col gap-0.5'>
-              <ModelBadge
-                modelName={modelInfo.name}
-                actualModel={modelInfo.actualModel}
-                responseModel={modelInfo.responseModel}
-              />
-            </div>
-          )
-        },
-        meta: { mobileTitle: true },
-      },
-      {
-        accessorKey: 'is_stream',
-        header: t('Stream'),
-        cell: ({ row }) => {
-          const log = row.original
-          if (!isTimingLogType(log.type)) return null
-
-          const useTime = row.getValue('use_time') as number
-          const other = parseLogOther(log.other)
-          const tokensPerSecond =
-            useTime > 0 && log.completion_tokens > 0
-              ? log.completion_tokens / useTime
-              : null
-
-          return (
-            <StreamTpsCell
-              isStream={log.is_stream}
-              isTask={other?.is_task === true}
-              isSyncTask={other?.task_sync === true}
-              tokensPerSecond={tokensPerSecond}
-              streamStatus={other?.stream_status}
-            />
-          )
-        },
-        meta: { label: t('Stream') },
-      },
-      {
-        accessorKey: 'prompt_tokens',
-        header: t('Tokens', { context: 'usage' }),
-        cell: ({ row }) => {
-          const log = row.original
-          if (!isDisplayableLogType(log.type)) return null
-
-          const other = parseLogOther(log.other)
-
-          const promptTokens = log.prompt_tokens || 0
-          const completionTokens = log.completion_tokens || 0
-          if (promptTokens === 0 && completionTokens === 0) {
-            return <span className='text-muted-foreground text-xs'>-</span>
-          }
-
-          const cacheReadTokens = other?.cache_tokens || 0
-          const cacheWrite5m = other?.cache_creation_tokens_5m || 0
-          const cacheWrite1h = other?.cache_creation_tokens_1h || 0
-          const hasSplitCache = cacheWrite5m > 0 || cacheWrite1h > 0
-          const cacheWriteTokens = hasSplitCache
-            ? cacheWrite5m + cacheWrite1h
-            : other?.cache_creation_tokens || 0
-
-          return (
-            <div className='flex flex-col gap-0.5'>
-              <span className='font-mono text-xs font-medium tabular-nums'>
-                {promptTokens.toLocaleString()} /{' '}
-                {completionTokens.toLocaleString()}
-              </span>
-              {(cacheReadTokens > 0 || cacheWriteTokens > 0) && (
-                <div className='flex items-center gap-1 text-[11px]'>
-                  {cacheReadTokens > 0 && (
-                    <span className='text-muted-foreground/60'>
-                      {t('Cache')}↓ {cacheReadTokens.toLocaleString()}
-                    </span>
-                  )}
-                  {cacheWriteTokens > 0 && (
-                    <span className='text-muted-foreground/60'>
-                      ↑ {cacheWriteTokens.toLocaleString()}
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-          )
-        },
-      },
+      // 使用日志-> 隐藏模型 by gb
+      // {
+      //   accessorKey: 'model_name',
+      //   header: t('Model'),
+      //   cell: function ModelCell({ row }) {
+      //     const log = row.original
+      //     if (!isDisplayableLogType(log.type)) return null
+      //
+      //     const modelInfo = formatModelName(log)
+      //
+      //     return (
+      //       <div className='flex w-fit flex-col gap-0.5'>
+      //         <ModelBadge
+      //           modelName={modelInfo.name}
+      //           actualModel={modelInfo.actualModel}
+      //           responseModel={modelInfo.responseModel}
+      //         />
+      //       </div>
+      //     )
+      //   },
+      //   meta: { mobileTitle: true },
+      // },
+        // 使用日志-> 隐藏流 by gb
+      // {
+      //   accessorKey: 'is_stream',
+      //   header: t('Stream'),
+      //   cell: ({ row }) => {
+      //     const log = row.original
+      //     if (!isTimingLogType(log.type)) return null
+      //
+      //     const useTime = row.getValue('use_time') as number
+      //     const other = parseLogOther(log.other)
+      //     const tokensPerSecond =
+      //       useTime > 0 && log.completion_tokens > 0
+      //         ? log.completion_tokens / useTime
+      //         : null
+      //
+      //     return (
+      //       <StreamTpsCell
+      //         isStream={log.is_stream}
+      //         isTask={other?.is_task === true}
+      //         isSyncTask={other?.task_sync === true}
+      //         tokensPerSecond={tokensPerSecond}
+      //         streamStatus={other?.stream_status}
+      //       />
+      //     )
+      //   },
+      //   meta: { label: t('Stream') },
+      // },
+        // 使用日志-> 隐藏Token by gb
+      // {
+      //   accessorKey: 'prompt_tokens',
+      //   header: t('Tokens', { context: 'usage' }),
+      //   cell: ({ row }) => {
+      //     const log = row.original
+      //     if (!isDisplayableLogType(log.type)) return null
+      //
+      //     const other = parseLogOther(log.other)
+      //
+      //     const promptTokens = log.prompt_tokens || 0
+      //     const completionTokens = log.completion_tokens || 0
+      //     if (promptTokens === 0 && completionTokens === 0) {
+      //       return <span className='text-muted-foreground text-xs'>-</span>
+      //     }
+      //
+      //     const cacheReadTokens = other?.cache_tokens || 0
+      //     const cacheWrite5m = other?.cache_creation_tokens_5m || 0
+      //     const cacheWrite1h = other?.cache_creation_tokens_1h || 0
+      //     const hasSplitCache = cacheWrite5m > 0 || cacheWrite1h > 0
+      //     const cacheWriteTokens = hasSplitCache
+      //       ? cacheWrite5m + cacheWrite1h
+      //       : other?.cache_creation_tokens || 0
+      //
+      //     return (
+      //       <div className='flex flex-col gap-0.5'>
+      //         <span className='font-mono text-xs font-medium tabular-nums'>
+      //           {promptTokens.toLocaleString()} /{' '}
+      //           {completionTokens.toLocaleString()}
+      //         </span>
+      //         {(cacheReadTokens > 0 || cacheWriteTokens > 0) && (
+      //           <div className='flex items-center gap-1 text-[11px]'>
+      //             {cacheReadTokens > 0 && (
+      //               <span className='text-muted-foreground/60'>
+      //                 {t('Cache')}↓ {cacheReadTokens.toLocaleString()}
+      //               </span>
+      //             )}
+      //             {cacheWriteTokens > 0 && (
+      //               <span className='text-muted-foreground/60'>
+      //                 ↑ {cacheWriteTokens.toLocaleString()}
+      //               </span>
+      //             )}
+      //           </div>
+      //         )}
+      //       </div>
+      //     )
+      //   },
+      // },
       {
         accessorKey: 'quota',
         header: t('Cost'),
@@ -810,93 +813,93 @@ export function useCommonLogsColumns(
           )
         },
       },
-
-      {
-        accessorKey: 'content',
-        header: t('Details'),
-        cell: function DetailsCell({ row }) {
-          const { t, i18n } = useTranslation()
-          const [dialogOpen, setDialogOpen] = useState(false)
-          const log = row.original
-          const other = parseLogOther(log.other)
-
-          const pricingData = usePricingData(
-            log.type === 2 &&
-              other?.is_task === true &&
-              other.billing_mode === 'tiered_expr'
-          )
-          const usageSchema = pluginUsageSchema(
-            pricingData.models.find(
-              (model) => model.model_name === log.model_name
-            ),
-            other?.admin_info?.task_plugin?.key
-          )
-          const segments = buildDetailSegments(
-            log,
-            other,
-            t,
-            isAdmin,
-            i18n.language,
-            usageSchema
-          )
-          const primary = segments[0]
-          const hasMore = segments.length > 1
-          let primaryTextClass = 'text-foreground'
-          if (primary?.muted) {
-            primaryTextClass = 'text-muted-foreground/60'
-          } else if (primary?.danger) {
-            primaryTextClass = 'text-red-600 dark:text-red-400'
-          }
-          let detailPreview = (
-            <span className='text-muted-foreground/40'>—</span>
-          )
-          if (primary) {
-            detailPreview = (
-              <span
-                className={cn(
-                  'truncate leading-snug group-hover:underline',
-                  primaryTextClass
-                )}
-              >
-                {primary.text}
-                {hasMore && (
-                  <span className='text-muted-foreground/40 ml-0.5'>
-                    +{segments.length - 1}
-                  </span>
-                )}
-              </span>
-            )
-          } else if (log.content) {
-            detailPreview = (
-              <span className='text-muted-foreground truncate group-hover:underline'>
-                {renderLogContent(other, t) ?? log.content}
-              </span>
-            )
-          }
-
-          return (
-            <>
-              <button
-                type='button'
-                className='group flex max-w-[200px] items-center gap-1 text-left text-xs'
-                onClick={() => setDialogOpen(true)}
-                title={t('Click to view full details')}
-              >
-                {detailPreview}
-              </button>
-              <DetailsDialog
-                log={log}
-                isAdmin={isAdmin}
-                isRoot={isRoot}
-                open={dialogOpen}
-                onOpenChange={setDialogOpen}
-              />
-            </>
-          )
-        },
-        size: 180,
-        maxSize: 200,
-      }
+        // 使用日志-> 隐藏 详情 by gb
+      // {
+      //   accessorKey: 'content',
+      //   header: t('Details'),
+      //   cell: function DetailsCell({ row }) {
+      //     const { t, i18n } = useTranslation()
+      //     const [dialogOpen, setDialogOpen] = useState(false)
+      //     const log = row.original
+      //     const other = parseLogOther(log.other)
+      //
+      //     const pricingData = usePricingData(
+      //       log.type === 2 &&
+      //         other?.is_task === true &&
+      //         other.billing_mode === 'tiered_expr'
+      //     )
+      //     const usageSchema = pluginUsageSchema(
+      //       pricingData.models.find(
+      //         (model) => model.model_name === log.model_name
+      //       ),
+      //       other?.admin_info?.task_plugin?.key
+      //     )
+      //     const segments = buildDetailSegments(
+      //       log,
+      //       other,
+      //       t,
+      //       isAdmin,
+      //       i18n.language,
+      //       usageSchema
+      //     )
+      //     const primary = segments[0]
+      //     const hasMore = segments.length > 1
+      //     let primaryTextClass = 'text-foreground'
+      //     if (primary?.muted) {
+      //       primaryTextClass = 'text-muted-foreground/60'
+      //     } else if (primary?.danger) {
+      //       primaryTextClass = 'text-red-600 dark:text-red-400'
+      //     }
+      //     let detailPreview = (
+      //       <span className='text-muted-foreground/40'>—</span>
+      //     )
+      //     if (primary) {
+      //       detailPreview = (
+      //         <span
+      //           className={cn(
+      //             'truncate leading-snug group-hover:underline',
+      //             primaryTextClass
+      //           )}
+      //         >
+      //           {primary.text}
+      //           {hasMore && (
+      //             <span className='text-muted-foreground/40 ml-0.5'>
+      //               +{segments.length - 1}
+      //             </span>
+      //           )}
+      //         </span>
+      //       )
+      //     } else if (log.content) {
+      //       detailPreview = (
+      //         <span className='text-muted-foreground truncate group-hover:underline'>
+      //           {renderLogContent(other, t) ?? log.content}
+      //         </span>
+      //       )
+      //     }
+      //
+      //     return (
+      //       <>
+      //         <button
+      //           type='button'
+      //           className='group flex max-w-[200px] items-center gap-1 text-left text-xs'
+      //           onClick={() => setDialogOpen(true)}
+      //           title={t('Click to view full details')}
+      //         >
+      //           {detailPreview}
+      //         </button>
+      //         <DetailsDialog
+      //           log={log}
+      //           isAdmin={isAdmin}
+      //           isRoot={isRoot}
+      //           open={dialogOpen}
+      //           onOpenChange={setDialogOpen}
+      //         />
+      //       </>
+      //     )
+      //   },
+      //   size: 180,
+      //   maxSize: 200,
+      // }
     )
 
     return columns
