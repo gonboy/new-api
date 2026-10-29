@@ -35,6 +35,8 @@ import { api } from '@/lib/api'
 import { handleServerError } from '@/lib/handle-server-error'
 import { useAuthStore } from '@/stores/auth-store'
 
+import { ROLE } from '@/lib/roles'
+
 type SidebarModuleConfig = {
   enabled: boolean
   [key: string]: boolean
@@ -55,6 +57,8 @@ export function SidebarModulesCard() {
   const [config, setConfig] = useState<SidebarModulesConfig>({})
   const currentUser = useAuthStore((s) => s.auth.user)
   const setUser = useAuthStore((s) => s.auth.setUser)
+
+  const isAdmin = !!(currentUser?.role && currentUser.role >= ROLE.ADMIN)
 
   const sectionDefs: SectionDef[] = [
     {
@@ -210,6 +214,11 @@ export function SidebarModulesCard() {
     }
     setConfig(defaults)
     toast.success(t('Reset to default configuration'))
+  }
+
+  // 屏蔽 个人信息栏目中的 部分栏目。 by gb. 隐藏
+  if (!isAdmin) {
+    return null
   }
 
   return (

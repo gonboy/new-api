@@ -1,0 +1,25 @@
+这个是初始的第一次的版本。 先测试能否正常编译。
+
+node.js 安装 V26.13.0
+https://nodejs.org/en/download?utm_source=chatgpt.com
+
+
+----------------------- 安装运行 前端
+1. 安装 Bun
+    cd web
+    npm install -g bun
+    bun --version
+2. 安装组件并编译
+    bun install --frozen-lockfile
+    bun run build
+    
+3. 如何启动前端
+   cd web
+   bun run dev -- --port 5173
+   
+   bun run build
+    
+----------------------- 安装运行 后端
+1. 返回根目录，进行编译
+    cd ..
+    go run .

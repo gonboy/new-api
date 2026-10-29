@@ -97,12 +97,13 @@ function RootComponent() {
       <NavigationProgress />
       <Outlet />
       <Toaster closeButton duration={5000} position='top-center' richColors />
-      {import.meta.env.MODE === 'development' && (
-        <>
-          <ReactQueryDevtools buttonPosition='bottom-left' />
-          <TanStackRouterDevtools position='bottom-right' />
-        </>
-      )}
+      {/* 暂时关闭开发调试面板 by gonboy */}
+      {/*{import.meta.env.MODE === 'development' && (*/}
+      {/*  <>*/}
+      {/*    <ReactQueryDevtools buttonPosition='bottom-left' />*/}
+      {/*    <TanStackRouterDevtools position='bottom-right' />*/}
+      {/*  </>*/}
+      {/*)}*/}
     </ThemeCustomizationProvider>
   )
 }

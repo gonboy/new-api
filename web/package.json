@@ -4,7 +4,7 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "dev": "rsbuild dev",
+    "dev": "rsbuild dev --port 5173",
     "build": "rsbuild build",
     "build:check": "bun check -b && rsbuild build",
     "typecheck": "bun check -b",

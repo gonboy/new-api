@@ -59,6 +59,9 @@ import { API_KEY_STATUS, ERROR_MESSAGES, SUCCESS_MESSAGES } from '../constants'
 import { apiKeySchema } from '../types'
 import { useApiKeys } from './api-keys-provider'
 
+import { ROLE } from '@/lib/roles'
+import { useAuthStore } from '@/stores/auth-store'
+
 function getServerAddress(): string {
   try {
     const raw = localStorage.getItem('status')
@@ -96,6 +99,9 @@ export function DataTableRowActions<TData>({
 
   const hasChatPresets = chatPresets.length > 0
   const toggleLabel = isEnabled ? t('Disable') : t('Enable')
+
+    const user = useAuthStore((s) => s.auth.user)
+    const isAdmin = !!(user?.role && user.role >= ROLE.ADMIN)
 
   const handleOpenChatPreset = useCallback(
     async (preset: ChatPreset) => {
@@ -253,21 +259,24 @@ export function DataTableRowActions<TData>({
           </DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={async () => {
-            const realKey = await resolveRealKey(apiKey.id)
-            if (!realKey) return
-            setResolvedKey(realKey)
-            setCurrentRow(apiKey)
-            setOpen('cc-switch')
-          }}
-        >
-          {t('CC Switch')}
-          <DropdownMenuShortcut>
-            <ArrowRightLeft size={16} />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-        {hasChatPresets && (
+        {/* 屏蔽部分右键菜单 by gb */}
+        {isAdmin && (
+            <DropdownMenuItem
+              onClick={async () => {
+                const realKey = await resolveRealKey(apiKey.id)
+                if (!realKey) return
+                setResolvedKey(realKey)
+                setCurrentRow(apiKey)
+                setOpen('cc-switch')
+              }}
+            >
+              {t('CC Switch')}
+              <DropdownMenuShortcut>
+                <ArrowRightLeft size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+        )}
+        {hasChatPresets && isAdmin &&(
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>{t('Chat')}</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
